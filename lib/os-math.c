@@ -1,11 +1,14 @@
-#include "math.h"
+#include "os-lib.h"
+
+#if __MATH
 
 /*
- * 姹俶鐨刵娆℃柟
- * 涓句緥瀛愶細
- * 2^13 = 2^4b'1101 = 2^4b'1000 * 2^3b'100 * 2^1b'1
+ * 函数功能 ： 求m的n次方
+ * 函数参数 ： m -> 底数
+ *             n -> 指数
+ * 函数返回 ： 计算结果
  */
-u_int __pow(u_int m,u_int n)
+int os_pow(int m,int n)
 {
     u_int result = 1;
     u_int tmp    = m;
@@ -20,3 +23,6 @@ u_int __pow(u_int m,u_int n)
 
     return result;
 }
+
+
+#endif /* __MATH */

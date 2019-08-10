@@ -1,11 +1,16 @@
-#include "io_cfg.h"
+#include "os-lib.h"
 
 #if __RING
 
-int str_len(const char *str)
+/*
+ * º¯Êý¹¦ÄÜ £º »ñÈ¡×Ö·û´®³¤¶È
+ * º¯Êý²ÎÊý £º str -> ÐèÒª»ñÈ¡³¤¶ÈµÄ×Ö·û´®
+ * º¯Êý·µ»Ø £º ×Ö·û´®³¤¶È
+ */
+int os_strlen(const char *str)
 {
     int ret = 0;
-    //stråˆæ³•ä¸”*strä¸ä¸ºç©º
+    //strºÏ·¨ÇÒ*str²»Îª¿Õ
     if(str && *str){
         while(*(str+ret)){
             ret++;
@@ -17,26 +22,39 @@ int str_len(const char *str)
     return ret;
 }
 
-int str_copy(char *dst,int dst_len,const char *src,int src_len)
+/*
+ * º¯Êý¹¦ÄÜ £º ×Ö·û´®¿½±´º¯Êý
+ * º¯Êý²ÎÊý £º dst -> Ä¿µÄ×Ö·û´®
+ *             src -> Ô´×Ö·û´®
+ *             src_len -> ÐèÒª¿½±´µÄ³¤¶È
+ * º¯Êý·µ»Ø £º Êµ¼Ê¿½±´µÄ³¤¶È£¬¿½±´½á¹û
+ */
+int os_strcopy(char *dst,int dst_len,const char *src,int src_len)
 {
     int ret = 0;
     if(dst && src){
         if(dst_len < src_len){
-            ret = -2;               //ç›®æ ‡å­—ç¬¦ä¸²é•¿åº¦å¤ªå°
+            ret = -2;               //Ä¿±ê×Ö·û´®³¤¶ÈÌ«Ð¡
         } else {
             while(*(src+ret)){
                 dst[ret] = src[ret];
                 ret++;
             }
-            dst[ret] = src[ret];   //å¡«å……å­—ç¬¦ä¸²ç»“æŸæ ‡å¿—
+            dst[ret] = src[ret];   //Ìî³ä×Ö·û´®½áÊø±êÖ¾
         }
     } else {
-        ret = -1;                  //æ“ä½œæ•°åœ°å€éžæ³•
+        ret = -1;                  //²Ù×÷ÊýµØÖ··Ç·¨
     }
     return ret;
 }
 
-int str_clr(char *str,int len)
+/*
+ * º¯Êý¹¦ÄÜ £º ×Ö·û´®Çå³ýº¯Êý
+ * º¯Êý²ÎÊý £º str -> ÐèÒªÇå³ýµÄ×Ö·û´®
+ *             len -> ×Ö·û´®³¤¶È
+ * º¯Êý·µ»Ø £º Çå³ý½á¹û
+ */
+int os_strclr(char *str,int len)
 {
     int ret = 0;
     
@@ -49,19 +67,26 @@ int str_clr(char *str,int len)
         }
         str[len] = '\0';
     } else {
-        ret = -1;                //æ“ä½œæ•°éžæ³•
+        ret = -1;                //²Ù×÷Êý·Ç·¨
     }
     
     return ret;
 }
 
-int str_cat(char *dst,char dst_len,const char *src)
+/*
+ * º¯Êý¹¦ÄÜ £º ×Ö·û´®Á¬½Óº¯Êý
+ * º¯Êý²ÎÊý £º dst -> Ä¿µÄ×Ö·û´®
+ *             src -> Ô´×Ö·û´®
+ *             dst_len -> Ä¿µÄ×Ö·û´®µÄ³¤¶È
+ * º¯Êý·µ»Ø £º Êµ¼ÊÁ¬½ÓµÄ³¤¶È£¬Á¬½Ó½á¹û
+ */
+int os_strcat(char *dst,char dst_len,const char *src)
 {
     int ret = 0;
     int index = 0;
     if(dst && src){
-        ret = str_len(dst);
-        if(dst_len >= ret + str_len(src)){
+        ret = os_strlen(dst);
+        if(dst_len >= ret + os_strlen(src)){
             ret -= 1;
             while(src[index]){
                 dst[ret] = src[index];
@@ -70,7 +95,7 @@ int str_cat(char *dst,char dst_len,const char *src)
             }
             dst[ret++] = '\0';
         } else {
-            ret = -2;                    //ç›®æ ‡å­—ç¬¦ä¸²ä¸å¤Ÿé•¿
+            ret = -2;                    //Ä¿±ê×Ö·û´®²»¹»³¤
         }
     } else {
         ret  = -1;
@@ -79,12 +104,18 @@ int str_cat(char *dst,char dst_len,const char *src)
     return ret;
 }
 
-int str_str(const char *src,const char *sub)
+/*
+ * º¯Êý¹¦ÄÜ £º ×Ö·û´®²éÕÒº¯Êý
+ * º¯Êý²ÎÊý £º sub -> ×Ó×Ö·û´®
+ *             src -> Ô´×Ö·û´®
+ * º¯Êý·µ»Ø £º ²éÕÒ½á¹û
+ */
+int os_strstr(const char *src,const char *sub)
 {
     int ret = 0;
     int index = 0;
     if(src && sub){
-        if((str_len(src) < str_len(sub))||(str_len(sub) <= 0)){
+        if((os_strlen(src) < os_strlen(sub))||(os_strlen(sub) <= 0)){
             ret = -2;
         } else {
             while(sub[index] && src[ret]){

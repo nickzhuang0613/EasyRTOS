@@ -1,9 +1,11 @@
-#include "lib_cfg.h"
+#include "os-lib.h"
 
 #if __RING
 
 /*
- * åˆå§‹åŒ–ç¼“å†²åŒº
+ * º¯Êı¹¦ÄÜ £º ³õÊ¼»¯»º³åÇø
+ * º¯Êı²ÎÊı £º in_ring -> ĞèÒª³õÊ¼»¯µÄ»º³åÇø
+ * º¯Êı·µ»Ø £º ÎŞ
  */
 void init_ring(ring_data *in_ring)
 {
@@ -15,7 +17,9 @@ void init_ring(ring_data *in_ring)
 }
 
 /*
- * é‡å¯ç¼“å†²åŒº
+ * º¯Êı¹¦ÄÜ £º ÖØÆô»º³åÇø
+ * º¯Êı²ÎÊı £º in_ring -> ĞèÒªÖØÆôµÄ»º³åÇø
+ * º¯Êı·µ»Ø £º ÎŞ
  */
 void ring_recover(ring_data *in_ring)
 {
@@ -23,15 +27,17 @@ void ring_recover(ring_data *in_ring)
 }
 
 /*
- * out_ringï¼šéœ€è¦è¾“å‡ºæ•°æ®çš„ç¼“å†²åŒº
- * get_buffï¼šå­˜æ”¾æ•°æ®çš„å†…å­˜åŒº
+ * º¯Êı¹¦ÄÜ £º Êä³ö»º³åÇøÊı¾İ
+ * º¯Êı²ÎÊı £º out_ring£ºĞèÒªÊä³öÊı¾İµÄ»º³åÇø
+ *             get_buff£º´æ·ÅÊı¾İµÄÄÚ´æÇø
+ * º¯Êı·µ»Ø £º »º³åÇøµ±Ç°µÄÆğÊ¼Î»ÖÃ
  */
 int ring_out(ring_data *out_ring,char *get_buff)
 {
     int end = 0;
     int index = 0;
 
-    //è·å–æœ€æ–°è·å¾—çš„æ•°æ®é•¿åº¦
+    //»ñÈ¡×îĞÂ»ñµÃµÄÊı¾İ³¤¶È
     if(out_ring->ring_buff[0]){
         end = out_ring->ring_end+(RING_MAX-out_ring->ring_start);
         out_ring->ring_buff[0] = 0;
@@ -39,14 +45,14 @@ int ring_out(ring_data *out_ring,char *get_buff)
         end = out_ring->ring_end-out_ring->ring_start;
     }
     
-    //å®šä½ç¬¬ä¸€ä¸ªå…ƒç´ 
+    //¶¨Î»µÚÒ»¸öÔªËØ
     out_ring->ring_start+=1;
     if(out_ring->ring_start > RING_MAX)
     {
         out_ring->ring_start = 1;
     }
 
-    //è¾“å‡ºå…ƒç´ 
+    //Êä³öÔªËØ
     while(index < end){
         get_buff[index++] = out_ring->ring_buff[out_ring->ring_start];
         out_ring->ring_start++;
@@ -63,8 +69,10 @@ int ring_out(ring_data *out_ring,char *get_buff)
 }
 
 /*
- * in_ringï¼šå­˜æ”¾æ•°æ®çš„ç¼“å†²åŒº
- * datï¼šéœ€è¦å­˜æ”¾çš„æ•°æ®
+ * º¯Êı¹¦ÄÜ £º Êä³ö»º³åÇøÊı¾İ
+ * º¯Êı²ÎÊı £º in_ring£ºĞèÒªÊäÈëÊı¾İµÄ»º³åÇø
+ *             dat£ºĞèÒª´æ·ÅµÄÊı¾İ
+ * º¯Êı·µ»Ø £º »º³åÇøµ±Ç°µÄ½áÊøÎ»ÖÃ
  */
 int ring_in(ring_data *in_ring,char dat)
 {
